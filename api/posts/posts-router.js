@@ -36,11 +36,17 @@ router.get('/:id', (req, res) => {
 router.get('/:id/comments', async (req, res) => {
     try {
         const { id } = req.params
-        const comments = await Posts.findComments(id)
-        res.status(200).json(comments)
-    } catch (err) {
+        const comments = await Posts.findPostsComments(id)
+        if(comments.length === 0) {
+            res.status(404).json({
+                message: "The post with this ID does not exist"
+            })
+        } else {
+            res.status(200).json(comments)
+        }
+        } catch (err) {
         res.status(500).json({
-            message: err.message,
+            message: "The comments could not be retreived"
         })
     }
 });
